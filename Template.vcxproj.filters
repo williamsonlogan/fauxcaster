@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="entity.cpp">
+      <Filter>src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="image.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="template.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="entity.h">
+      <Filter>src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="image.h">
+      <Filter>src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="template.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{e7d8848d-8900-4e7a-8994-8233a176b1b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Objects">
+      <UniqueIdentifier>{93f11918-b251-4eb7-8df0-589ee9e15b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics">
+      <UniqueIdentifier>{ade03e5b-940e-4536-a367-13f36d6f9452}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
