@@ -5,7 +5,10 @@ using namespace std;
 
 // Link to GDK libraries
 #include "AGK.h"
-#include <iostream>
+
+// Our libraries
+#include "entity.h"
+#include "player.h"
 
 #define DEVICE_WIDTH 1280
 #define DEVICE_HEIGHT 720
@@ -27,10 +30,8 @@ class app
 		int Loop( void );
 		void End( void );
 
-		int cameraID;
-
 		string map;
-		std::vector<int> objects;
+		std::vector<Entity*> objects;
 };
 
 extern app App;
