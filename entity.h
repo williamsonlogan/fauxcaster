@@ -28,7 +28,7 @@ public:
 
 	virtual void Update()
 	{
-		agk::SetObjectPosition(_id, _posx, 0, _posy);
+		agk::SetObjectPosition(_id, _posx + 0.5f, 0, _posy + 0.5f);
 		agk::SetObjectImage(_id, _texture.getID(), 0);
 	}
 

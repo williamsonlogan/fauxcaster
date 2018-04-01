@@ -5,10 +5,11 @@ using namespace std;
 
 // Link to GDK libraries
 #include "AGK.h"
+#include "player.h"
+#include "entity.h"
+#include "map.h"
 
 // Our libraries
-#include "entity.h"
-#include "player.h"
 
 #define DEVICE_WIDTH 1280
 #define DEVICE_HEIGHT 720
@@ -30,7 +31,7 @@ class app
 		int Loop( void );
 		void End( void );
 
-		string map;
+		Map * map;
 		std::vector<Entity*> objects;
 };
 

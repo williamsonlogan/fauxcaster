@@ -1,12 +1,17 @@
 #pragma once
+
 #include "entity.h"
+#include "map.h"
 #include <iostream>
+#include <string>
+
+#define RADS 3.14159 / 180
 
 class Player :
 	public Entity
 {
 public:
-	Player(float posx, float posy, std::string * map);
+	Player(float posx, float posy, Map * map);
 	~Player();
 
 	void Update();
@@ -14,9 +19,10 @@ public:
 	float GetHorizontalAxis();
 	float GetVerticalAxis();
 
-	float movementSpeed = 10.0f;
-	float mouseSensitivity = 20.0f;
-	int fieldOfView = 80;
-	std::string * _map;
+	float rotation = 0.0f;
+	float movementSpeed = 2.5f;
+	float mouseSensitivity = 150.0f;
+	int fieldOfView = 90;
+	Map * _map;
 };
 

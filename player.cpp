@@ -1,8 +1,6 @@
 #include "player.h"
 
-
-
-Player::Player(float posx, float posy, std::string * map) : Entity("player", posx, posy, "\0")
+Player::Player(float posx, float posy, Map * map) : Entity::Entity("player", posx, posy, "\0")
 {
 	if (agk::GetObjectExists(getID()))
 		agk::DeleteObject(getID());
@@ -12,7 +10,7 @@ Player::Player(float posx, float posy, std::string * map) : Entity("player", pos
 	agk::SetCameraPosition(1, posx, 0, posy);
 	agk::SetCameraRotation(1, 0, 0, 0);
 	agk::SetCameraFOV(1, fieldOfView);
-	agk::SetCameraRange(1, 0.1f, 500.0f);
+	agk::SetCameraRange(1, 0.0001f, 500.0f);
 
 	agk::SetRawMouseVisible(0);
 }
@@ -25,27 +23,43 @@ Player::~Player()
 
 void Player::Update()
 {
-	float rotation = GetMouseX() * mouseSensitivity;
+	rotation += GetMouseX() * mouseSensitivity * agk::GetFrameTime();
 
-	agk::RotateCameraLocalY(1, rotation);
+	//TODO: Up and Down looking (Don't forget to lock it!)
 
-	float forwardSpeed = GetVerticalAxis() * (agk::GetFrameTime())* movementSpeed / 5;
-	float strafeSpeed = GetHorizontalAxis() * (agk::GetFrameTime()) * movementSpeed / 5;
+	agk::SetCameraRotation(1, 0, rotation, 0);
 
-	agk::MoveCameraLocalZ(1, forwardSpeed);
-	agk::MoveCameraLocalX(1, strafeSpeed);
+	if (GetVerticalAxis() != 0)
+	{
+		setPosition(getPosX() + sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis(),
+			getPosY() + cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis());
+		if (_map->GetTile((int)getPosX(), (int)getPosY()) != '.')
+		{
+			//TODO: ResolveCollision()
+			setPosition(getPosX() - sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis(),
+				getPosY() - cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis());
+		}
+	}
 
-	setPosition(agk::GetCameraX(1), agk::GetCameraZ(1));
+	if (GetHorizontalAxis() != 0)
+	{
+		setPosition(getPosX() + cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis(),
+			getPosY() - sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis());
+		if (_map->GetTile((int)getPosX(), (int)getPosY()) != '.')
+		{
+			//TODO: ResolveCollision()
+			setPosition(getPosX() - cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis(),
+				getPosY() + sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis());
+		}
+	}
 
-	agk::PrintC((int)getPosX());
-	agk::PrintC(",");
-	agk::PrintC((int)getPosY());
+	agk::SetCameraPosition(1, getPosX(), 0, getPosY());
 }
 
 float Player::GetMouseX()
 {
 	float mx = agk::GetRawMouseX() - (agk::GetVirtualWidth() / 2);
-	float xmove = 0; xmove += mx; xmove /= 100;
+	float xmove = 0; xmove += mx; xmove /= 10;
 
 	agk::SetRawMousePosition(agk::GetVirtualWidth() / 2, agk::GetVirtualHeight() / 2);
 	return xmove;

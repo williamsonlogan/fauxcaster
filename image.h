@@ -1,18 +1,22 @@
 #pragma once
 
 #include "agk.h"
+#include <string>
 
 class Image
 {
-public:
+  public:
 	Image() = default;
-	Image(std::string path) { _id = agk::LoadImage(path.c_str()); }
-	~Image() { //if(agk::GetImageExists(_id)) agk::DeleteImage(_id); 
+	Image(std::string path)
+	{
+		_id = agk::LoadImage(path.c_str());
 	}
 
-	int getID() { return _id; }
+	int getID()
+	{
+		return _id;
+	}
 
-private:
+  private:
 	int _id;
 };
-
