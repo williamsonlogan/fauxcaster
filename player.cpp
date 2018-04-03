@@ -26,8 +26,15 @@ void Player::Update()
 	rotation += GetMouseX() * mouseSensitivity * agk::GetFrameTime();
 
 	//TODO: Up and Down looking (Don't forget to lock it!)
+	if (pitch <= 60.0f && pitch >= -60.0f)
+		pitch += GetMouseY() * mouseSensitivity * agk::GetFrameTime();
 
-	agk::SetCameraRotation(1, 0, rotation, 0);
+	if (pitch > 60.0f)
+		pitch = 60.0f;
+	else if (pitch < -60.0f)
+		pitch = -60.0f;
+
+	agk::SetCameraRotation(1, pitch, rotation, 0);
 
 	if (GetVerticalAxis() != 0)
 	{
@@ -54,6 +61,7 @@ void Player::Update()
 	}
 
 	agk::SetCameraPosition(1, getPosX(), 0, getPosY());
+	agk::SetRawMousePosition(agk::GetVirtualWidth() / 2, agk::GetVirtualHeight() / 2);
 }
 
 float Player::GetMouseX()
@@ -61,8 +69,15 @@ float Player::GetMouseX()
 	float mx = agk::GetRawMouseX() - (agk::GetVirtualWidth() / 2);
 	float xmove = 0; xmove += mx; xmove /= 10;
 
-	agk::SetRawMousePosition(agk::GetVirtualWidth() / 2, agk::GetVirtualHeight() / 2);
 	return xmove;
+}
+
+float Player::GetMouseY()
+{
+	float my = agk::GetRawMouseY() - (agk::GetVirtualHeight() / 2);
+	float ymove = 0; ymove += my; ymove /= 10;
+
+	return ymove;
 }
 
 float Player::GetHorizontalAxis()

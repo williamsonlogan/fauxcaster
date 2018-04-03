@@ -9,7 +9,7 @@ app App;
 void app::Begin(void)
 {
 	agk::SetVirtualResolution(256, 144);
-	agk::SetClearColor(50, 50, 50); // grey
+	agk::SetClearColor(30, 30, 30); // grey
 	agk::SetSyncRate(60, 0);
 	agk::SetPrintSize(6);
 	agk::SetDefaultMagFilter(0);

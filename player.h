@@ -4,8 +4,7 @@
 #include "map.h"
 #include <iostream>
 #include <string>
-
-#define RADS 3.14159 / 180
+#include "macros.h"
 
 class Player :
 	public Entity
@@ -16,10 +15,13 @@ public:
 
 	void Update();
 	float GetMouseX();
+	float GetMouseY();
 	float GetHorizontalAxis();
 	float GetVerticalAxis();
 
 	float rotation = 0.0f;
+	float pitch = 0.0f;
+	float pitchLock = 60.0f;
 	float movementSpeed = 2.5f;
 	float mouseSensitivity = 150.0f;
 	int fieldOfView = 90;

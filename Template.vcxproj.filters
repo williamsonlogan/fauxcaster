@@ -27,6 +27,9 @@
     <ClInclude Include="map.h">
       <Filter>src\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="macros.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

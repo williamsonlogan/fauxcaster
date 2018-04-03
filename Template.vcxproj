@@ -132,6 +132,7 @@
     <ClInclude Include="map.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="template.h" />
+    <ClInclude Include="macros.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
