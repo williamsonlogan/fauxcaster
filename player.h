@@ -22,7 +22,7 @@ public:
 	float rotation = 0.0f;
 	float pitch = 0.0f;
 	float pitchLock = 60.0f;
-	float movementSpeed = 2.5f;
+	float movementSpeed = .05f;
 	float mouseSensitivity = 150.0f;
 	int fieldOfView = 90;
 	Map * _map;

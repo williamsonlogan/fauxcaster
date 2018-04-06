@@ -25,7 +25,6 @@ void Player::Update()
 {
 	rotation += GetMouseX() * mouseSensitivity * agk::GetFrameTime();
 
-	//TODO: Up and Down looking (Don't forget to lock it!)
 	if (pitch <= 60.0f && pitch >= -60.0f)
 		pitch += GetMouseY() * mouseSensitivity * agk::GetFrameTime();
 
@@ -36,27 +35,82 @@ void Player::Update()
 
 	agk::SetCameraRotation(1, pitch, rotation, 0);
 
+	float velx = 0, vely = 0;
+	bool collides = false;
+
 	if (GetVerticalAxis() != 0)
 	{
-		setPosition(getPosX() + sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis(),
-			getPosY() + cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis());
-		if (_map->GetTile((int)getPosX(), (int)getPosY()) != '.')
+		velx += sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis();
+		vely += cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis();
+
+		/*if (_map->GetTile((int)getPosX(), (int)getPosY()) != '.')
 		{
 			//TODO: ResolveCollision()
 			setPosition(getPosX() - sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis(),
 				getPosY() - cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis());
 		}
+		*/
 	}
 
 	if (GetHorizontalAxis() != 0)
 	{
-		setPosition(getPosX() + cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis(),
-			getPosY() - sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis());
+		velx += cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis();
+		vely -= sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis();
+
+		/*
 		if (_map->GetTile((int)getPosX(), (int)getPosY()) != '.')
 		{
 			//TODO: ResolveCollision()
 			setPosition(getPosX() - cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis(),
 				getPosY() + sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis());
+		}
+		*/
+	}
+
+	if (velx != 0 || vely != 0)
+	{
+		//normalize velocity to scale by speed
+		float velMag = std::sqrt(velx * velx + vely * vely);
+		velx /= velMag;
+		vely /= velMag;
+		velMag = 1;
+
+		velx *= movementSpeed;
+		vely *= movementSpeed;
+
+		float newx = getPosX() + velx;
+		float newy = getPosY() + vely;
+
+		for (int i = -1; i <= 1 && !collides; ++i)
+		{
+			for (int j = -1; j <= 1 && !collides; ++j)
+			{
+				if (newx + i * .01f < _map->getWidth()  && newx + i * .01f >= 0 &&
+					newy + j * .01f < _map->getHeight() && newy + j * .01f >= 0 &&
+					_map->GetTile(int(newx + i * .01f),int(newy + j * .01f)) != '.')
+					collides = true;
+			}
+		}
+
+		if (!collides)
+		{
+			setPosition(newx, newy);
+		}
+		else
+		{
+			//normalize velocity
+			velMag = std::sqrt(velx * velx + vely * vely);
+			velx /= velMag;
+			vely /= velMag;
+			velMag = 1;
+
+			float oldvelx = velx;
+			if (_map->GetTile(int(getPosX()), int(getPosY() + vely)) != '.')
+				velx = 0;
+			if (_map->GetTile(int(getPosX() + oldvelx), int(getPosY())) != '.')
+				vely = 0;
+			if (_map->GetTile(int(getPosX() + velx), int(getPosY() + vely)) != '.')
+				setPosition(getPosX() + 0.1 * velx, getPosY() + 0.1 * vely);
 		}
 	}
 
