@@ -38,31 +38,33 @@ void Player::Update()
 	float velx = 0, vely = 0;
 	bool collides = false;
 
+	float dirX = sinf(rotation * RADS), dirY = cosf(rotation * RADS);
+	float perpDirX = dirY, perpDirY = -dirX;
 	if (GetVerticalAxis() != 0)
 	{
-		velx += sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis();
-		vely += cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis();
+		velx += dirX * GetVerticalAxis();
+		vely += dirY * GetVerticalAxis();
 
 		/*if (_map->GetTile((int)getPosX(), (int)getPosY()) != '.')
 		{
-			//TODO: ResolveCollision()
-			setPosition(getPosX() - sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis(),
-				getPosY() - cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis());
+		//TODO: ResolveCollision()
+		setPosition(getPosX() - sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis(),
+		getPosY() - cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetVerticalAxis());
 		}
 		*/
 	}
 
 	if (GetHorizontalAxis() != 0)
 	{
-		velx += cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis();
-		vely -= sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis();
+		velx += perpDirX * GetHorizontalAxis();
+		vely += perpDirY * GetHorizontalAxis();
 
 		/*
 		if (_map->GetTile((int)getPosX(), (int)getPosY()) != '.')
 		{
-			//TODO: ResolveCollision()
-			setPosition(getPosX() - cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis(),
-				getPosY() + sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis());
+		//TODO: ResolveCollision()
+		setPosition(getPosX() - cosf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis(),
+		getPosY() + sinf(rotation * RADS) * movementSpeed * agk::GetFrameTime() * GetHorizontalAxis());
 		}
 		*/
 	}
@@ -85,9 +87,13 @@ void Player::Update()
 		{
 			for (int j = -1; j <= 1 && !collides; ++j)
 			{
-				if (newx + i * .01f < _map->getWidth()  && newx + i * .01f >= 0 &&
-					newy + j * .01f < _map->getHeight() && newy + j * .01f >= 0 &&
-					_map->GetTile(int(newx + i * .01f),int(newy + j * .01f)) != '.')
+				float checkMag = std::sqrt(i * i + j * j);
+				float xOff = (float)i / checkMag;
+				float yOff = (float)j / checkMag;
+
+				if (newx + xOff * 0.075f < _map->getWidth() && newx + xOff * 0.075f >= 0 &&
+					newy + yOff * 0.075f < _map->getHeight() && newy + yOff * 0.075f >= 0 &&
+					_map->IsWall(int(newx + xOff * 0.075f), int(newy + yOff * 0.075f)))
 					collides = true;
 			}
 		}
@@ -105,11 +111,11 @@ void Player::Update()
 			velMag = 1;
 
 			float oldvelx = velx;
-			if (_map->GetTile(int(getPosX()), int(getPosY() + vely)) != '.')
+			if (!_map->IsWall(int(getPosX()), int(getPosY() + vely)))
 				velx = 0;
-			if (_map->GetTile(int(getPosX() + oldvelx), int(getPosY())) != '.')
+			if (!_map->IsWall(int(getPosX() + oldvelx), int(getPosY())))
 				vely = 0;
-			if (_map->GetTile(int(getPosX() + velx), int(getPosY() + vely)) != '.')
+			if (!_map->IsWall(int(getPosX() + velx), int(getPosY() + vely)))
 				setPosition(getPosX() + 0.1 * velx, getPosY() + 0.1 * vely);
 		}
 	}

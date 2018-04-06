@@ -44,6 +44,11 @@ class Map
 			_map[y * _width + x] = c;
 	}
 
+	bool IsWall(int x, int y)
+	{
+		return (GetTile(x, y) == '#');
+	}
+
 	int getWidth() { return _width; }
 	int getHeight() { return _height; }
 
